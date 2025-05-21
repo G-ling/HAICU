@@ -48,12 +48,12 @@ data2.drop(0, inplace= True)
 data2[0] = data2[0]/1000000
 print(data2)
 
-fig,ax = plt.subplots()
-curr = ax.plot(data2[0],1000*data2[7]/data2[6], linewidth = 1, label = "R2",color = "xkcd:orange")
-ax.plot(data[0],1000*data[7]/data[6], linewidth = 1, label = "R1",color = "xkcd:grey")
+fig,(ax,ax2) = plt.subplots(1,2)
+curr = ax.plot(data2[(data2[0] > 50) & (data2[0] < 60)][0],data2[(data2[0] > 50) & (data2[0] < 60)][6], linewidth = 1, label = "R2",color = "xkcd:ocean blue")
 ax.tick_params(axis ='y') 
 ax.set_xlabel("Time (s)")
-ax.set_ylabel("Resistance m$\Omega$")
+ax.set_ylabel("Current (A)")
+
 
 
 plt.show()
