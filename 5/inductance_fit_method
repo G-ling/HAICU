@@ -1,0 +1,60 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+from matplotlib import cm
+
+import os
+print(os.getcwd())
+
+# Get data
+vset = pd.read_csv("5\inductance_100A\RTM3004US_CHAN1.csv")
+vread = pd.read_csv("5\inductance_100A\RTM3004US_CHAN2.csv")
+iread = pd.read_csv("5\inductance_100A\RTM3004US_CHAN3.csv")
+
+#scale to correct voltage/current
+vread["C2 in V"] = vread["C2 in V"]*40
+iread["C3 in V"] = iread["C3 in V"]*40
+
+
+#trim
+start = 0.9e-5
+end = 1.9e-5
+vread_t = vread[(vread["in s"] > start) & (vread["in s"] < end) ]
+iread_t = iread[(iread["in s"] > start) & (iread["in s"] < end) ]
+
+v_coeff = np.polyfit(vread_t["in s"],vread_t["C2 in V"],deg = 3)
+i_coeff = np.polyfit(iread_t["in s"],iread_t["C3 in V"],deg = 3)
+
+v = np.poly1d(v_coeff)
+i = np.poly1d(i_coeff)
+di_dt = np.poly1d([3*i.c[0],2*i.c[1],i.c[2]])
+
+#print(np.poly1d(v))
+#print(np.poly1d(i))
+print(v.c)
+print(i.c)
+print(di_dt)
+
+
+
+
+
+fig, ax = plt.subplots()
+ax.plot(vset["in s"],vset["C1 in V"])
+ax.plot(vread["in s"],vread["C2 in V"])
+ax.plot(iread["in s"], iread["C3 in V"] )
+ax.vlines(start,0,95,'r')
+ax.vlines(end,0,95,'r')
+
+ax.plot(vread_t["in s"],v(vread_t["in s"]),'k--')
+ax.plot(iread_t["in s"],i(iread_t["in s"]),'k--')
+
+plt.show()
+
+fig, ax = plt.subplots()
+ax.plot(vread_t["in s"],v(vread_t["in s"])/di_dt(vread_t["in s"]))
+
+plt.show()
+
+
