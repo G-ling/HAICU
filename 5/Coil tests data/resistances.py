@@ -9,7 +9,7 @@ print(os.getcwd())
 
 # Get data
 
-data = pd.read_csv("5/Coil tests data/lcoil_400A_5min.dat", sep = "\t", header = None)
+data = pd.read_csv("5/Coil tests data/sgx1200_01_curr10A_1.csv.txt", sep = "\t", header = None)
 data[0] = data[0]/1000000
 print(data)
 
@@ -24,6 +24,17 @@ flow = flow[(flow["Time"] > 0) & (flow["Time"] < 65)]
 #JE calibration formula in ml/s (inside brackets) - GW then converts to L/min
 flow["flow1"] = (flow["flow1"]*(5.4532/2) + 32.005)*60/1000
 flow["flow2"] = (flow["flow2"]*(5.4532/2) + 32.005)*60/1000
+
+#### 10A resistance test #########
+data.drop(data[data[6] > 1][0].index, inplace=True)
+data.drop([0,1],inplace=True)
+data = data[data[0] < 65]
+
+fig,ax = plt.subplots()
+ax.plot(data[0],1000*data[6]/data[7], linewidth = 1, label = "I",color = "xkcd:ocean blue")
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Resistance (m$\Omega$)")
+plt.show()
 
 fig,ax = plt.subplots()
 curr = ax.plot(data[0],data[6], linewidth = 1, label = "I",color = "xkcd:ocean blue")
