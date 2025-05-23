@@ -59,8 +59,12 @@ data2.drop(0, inplace= True)
 data2[0] = data2[0]/1000000
 print(data2)
 
+
+data["res"] = data[7]/data[6]
+data2['res'] = data2[7]/data2[6]
+
 fig,(ax,ax2) = plt.subplots(1,2)
-curr = ax.plot(data2[(data2[0] > 50) & (data2[0] < 60)][0],data2[(data2[0] > 50) & (data2[0] < 60)][6], linewidth = 1, label = "R2",color = "xkcd:ocean blue")
+curr = ax.plot(data2[(data2[6] > 180) & (data2[6] < 220)][0],data2[(data2[6] > 180) & (data2[6] < 220)]['res'], linewidth = 1, label = "R2",color = "xkcd:ocean blue")
 ax.tick_params(axis ='y') 
 ax.set_xlabel("Time (s)")
 ax.set_ylabel("Current (A)")
@@ -69,19 +73,17 @@ ax.set_ylabel("Current (A)")
 
 plt.show()
 
-data["res"] = data[7]/data[6]
-data2['res'] = data2[7]/data2[6]
 
 data2.drop(data2[data2['res'] > 0.027].index, inplace= True)
 
 fig,(ax,ax2,ax3) = plt.subplots(3, sharex = True)
-ax.plot(data2[(data2[0] > 0) &(data2[0] < 80)][0], 1000*data2[(data2[0] > 0) &(data2[0] < 80)]["res"], linewidth = 1.5, linestyle = "-", color = "tab:red")
-ax.plot(data[(data[0] > 0) &(data[0] < 60)][0], 1000*data[(data[0] > 0) &(data[0] < 60)]["res"], linewidth = 1, linestyle = "-", color = "tab:gray")
+ax.plot(data2[(data2[6] > 180) &(data2[6] < 220)][0], 1000*data2[(data2[6] > 180) &(data2[6] < 220)]["res"], linewidth = 1.5, linestyle = "-", color = "tab:red")
+#ax.plot(data[(data[0] > 0) &(data[0] < 60)][0], 1000*data[(data[0] > 0) &(data[0] < 60)]["res"], linewidth = 1, linestyle = "-", color = "tab:gray")
 #fit = np.polyfit(data[(data[0] > 150) &(data[0] < 300)][0],data[(data[0] > 150) &(data[0] < 300)]["res"],2)
 #print(fit)
 #r = np.poly1d(fit)
 #ax.plot(data[(data[0] > 100) &(data[0] < 300)][0],r(data[(data[0] > 100) &(data[0] < 300)][0]), color = "tab:red", linewidth = 1)
-ax.hlines(25.3,0,60, linewidth = 1, linestyle = "--", color = "k", label = "25.3m$\Omega$")
+#ax.hlines(25.3,0,60, linewidth = 1, linestyle = "--", color = "k", label = "25.3m$\Omega$")
 ax.legend()
 
 ax.set_ylabel("Resistance (m$\Omega$)")
