@@ -17,3 +17,8 @@ plt.plot(times,1000*data['R1_t'])
 plt.plot(times,1000*data['R2_t'])
 ax.set_ylabel('R$_0$ (m$\Omega$ / $^0 C$)')
 plt.show()
+
+fig,ax = plt.subplots()
+plt.plot(times,1000*data['R1_t'])
+
+plt.show()
