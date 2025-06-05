@@ -10,20 +10,20 @@ print(os.getcwd())
 
 # Get data
 
-data = pd.read_csv("5/field_map/arduino_hall.csv")
+data = pd.read_csv("5/field_map/lower_mirror_cal.csv")
 data["ftime"] = [dt.datetime.fromtimestamp(ts) for ts in data["time"]]
 
 #Detect step
 
 data["up"] = data.shift(-1)["mag"] > 1.06*data["mag"]
-data["down"] = data.shift(1)["mag"] > 1.3*data["mag"] 
+data["down"] = data.shift(1)["mag"] > 1.1*data["mag"] 
 
 ups = data.loc[data["up"]].reset_index()
 downs = data.loc[data["down"]].reset_index()
 
 edges = pd.merge(ups,downs,how = "outer")
 edges["length"] = edges.shift(-1)["index"] - edges["index"]
-remove = edges[edges["length"] < 10].index
+remove = edges[edges["length"] < 6].index
 edges.drop(remove, inplace = True)
 edges.dropna(inplace=True)
 
@@ -67,7 +67,7 @@ for i in edges["ftime"]:
     ax.vlines(i,0,140,'tab:gray', linestyles="--", linewidth = 1)
 
 ax.plot(ftime,points, color = 'bisque', marker = 'd', linestyle = "none", markeredgecolor = 'k')
-ax.plot((ftime[11],ftime[18],ftime[4]), (points[11], points[18], points[4]), linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 20)
+#ax.plot((ftime[11],ftime[18],ftime[4]), (points[11], points[18], points[4]), linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 20)
 
 ax.set_title("Lower mirror coil @ 200A", fontsize = 14)
 ax.set_xlabel("Time (D Hr:Min)")
