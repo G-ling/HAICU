@@ -81,6 +81,41 @@ fig, ax = plt.subplots()
 
 # points removed 
 
+points.pop(26)
+points.pop(25)
+points.pop(23)
+points.pop(21)
+points.pop(16)
+points.pop(14)
+points.pop(8)
+points.pop(6)
+points.pop(4)
+points.pop(1)
+
+noise.pop(26)
+noise.pop(25)
+noise.pop(23)
+noise.pop(21)
+noise.pop(16)
+noise.pop(14)
+noise.pop(8)
+noise.pop(6)
+noise.pop(4)
+noise.pop(1)
+
+time.pop(26)
+time.pop(25)
+time.pop(23)
+time.pop(21)
+time.pop(16)
+time.pop(14)
+time.pop(8)
+time.pop(6)
+time.pop(4)
+time.pop(1)
+
+
+"""
 points.pop(11)
 points.pop()
 noise.pop(11)
@@ -90,6 +125,7 @@ noise.pop(4)
 time.pop(11)
 time.pop()
 time.pop(4)
+"""
 
 x = np.arange(start = 0, stop = len(points)*10, step = 10 )
 
