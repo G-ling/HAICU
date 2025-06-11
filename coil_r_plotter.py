@@ -7,8 +7,8 @@ import matplotlib.dates as mdates
 from datetime import datetime
 
 
-dates = [datetime(2025, 2, 3), datetime(2025, 5, 2), datetime(2025, 5, 20)]
-values = [25.6, 29.7, 30.0]
+dates = [datetime(2025, 2, 3), datetime(2025, 5, 2), datetime(2025, 5, 20), datetime(2025, 6, 4), datetime(2025, 6, 11)]
+values = [25.6, 29.7, 30.0, 30.1, 30.2]
 plt.figure()
 plt.errorbar(mdates.date2num(dates), values, yerr = 0.04, marker = '.', mfc = 'k', mec = 'k', linewidth = 1.5)
 plt.ylabel('Resistance (m$\Omega$)')
