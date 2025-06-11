@@ -67,7 +67,7 @@ for i in edges["ftime"]:
     ax.vlines(i,0,140,'tab:gray', linestyles="--", linewidth = 1)
 
 ax.plot(ftime,points, color = 'bisque', marker = 'd', linestyle = "none", markeredgecolor = 'k')
-#ax.plot((ftime[11],ftime[18],ftime[4]), (points[11], points[18], points[4]), linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 20)
+ax.plot((ftime[1],ftime[8],ftime[4], ftime[6], ftime[14], ftime[16], ftime[21], ftime[23], ftime[25], ftime[26]), (points[1], points[8], points[4], points[6], points[14], points[16], points[21], points[23], points[25], points[26]), linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 15, mew = 2)
 
 ax.set_title("Lower mirror coil @ 200A", fontsize = 14)
 ax.set_xlabel("Time (D Hr:Min)")
@@ -134,7 +134,7 @@ x = np.arange(start = 0, stop = len(points)*10, step = 10 )
 ##############     points now contains the data points, noise the y error  ################
 
 def on_axis(x,I,center,R=18,neg = 1):
-    y = (neg)*(I*(R**2))/(((R**2) + ((x-center)**2))**(3/2))
+    y = 1000*(1.257e-3)*0.5*36*(neg)*(I*(R**2))/(((R**2) + ((x-center)**2))**(3/2))
     return y
 
 def sol(x,c,R,l,I = 200):
@@ -150,9 +150,10 @@ y = on_axis(x_c,param[0], param[1], param[2])
 y_max = max(y)
 x_max = x_c[np.where(y == y_max)]
 
-ax.errorbar(x = x - param[1] , y = points, yerr = [x + 2.5 for x in noise], xerr = 2.5, marker = 'd' , linestyle='None', color = 'bisque',  ecolor = 'k',  markeredgecolor = 'k')
+ax.errorbar(x = x - param[1] , y = points, yerr = [((x)**2 + 1)**0.5 for x in noise], xerr = 2.5, marker = 'd' , linestyle='None', color = 'bisque',  ecolor = 'k',  markeredgecolor = 'k')
 ax.plot(x_c - param[1],y, color = 'tab:blue')
-ax.plot(x_c - param[1],sol(x_c,82,23.5,24.7,200),'y--')
+#ax.plot(x_c - param[1],sol(x_c,82,23.5,24.7,200),'y--', label = 'Solenoid model')
+ax.plot(x_c - param[1],on_axis(x_c,199.776,82),'y--', label = 'Single loop model')
 #ax.plot(x_c- param[1],sol(x_c,82,17.7,24.7,200),'g--')
 #ax.hlines(y_max,0,160)
 print(y_max)
