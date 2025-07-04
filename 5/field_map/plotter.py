@@ -150,16 +150,31 @@ y = on_axis(x_c,param[0], param[1], param[2])
 y_max = max(y)
 x_max = x_c[np.where(y == y_max)]
 
+#Import Comsol data#
+comsol = pd.read_csv("5/field_map/comsol.csv", header = None)
+
+
+#Center comsol data so peak is at 0#
+com_imax = comsol.idxmax(axis = 0) #tuple of two index values: indeces of max value in column 0 and 1
+#print(com_imax[1]) #index of df row with max y value
+com_xmax = comsol.loc[com_imax[1]][0]
+#print(com_xmax) #x value at peak
+
+#Crop comsol data#
+comsol = comsol[(comsol[0] > (com_xmax - 90)) & (comsol[0] < (com_xmax + 90))]
+print(comsol)
+
 ax.errorbar(x = x - param[1] , y = points, yerr = [((x)**2 + 1)**0.5 for x in noise], xerr = 2.5, marker = 'd' , linestyle='None', color = 'bisque',  ecolor = 'k',  markeredgecolor = 'k')
-ax.plot(x_c - param[1],y, color = 'tab:blue')
-#ax.plot(x_c - param[1],sol(x_c,82,23.5,24.7,200),'y--', label = 'Solenoid model')
-ax.plot(x_c - param[1],on_axis(x_c,199.776,82),'y--', label = 'Single loop model')
+ax.plot(x_c - param[1],y, color = 'tab:blue', label = "Fitted")
+ax.plot(x_c - param[1],sol(x_c,param[1],23.5,24.7,200),linestyle = "-", label = 'Solenoid', color = "xkcd:orange",linewidth = 1)
+ax.plot(x_c - param[1],on_axis(x_c,200,param[1]),'y', label = 'Single loop',linewidth = 1)
+ax.plot(comsol[0]-com_xmax, comsol[1]*1000, color = "k", linewidth = 1, linestyle = "--",label = "COMSOL")
 #ax.plot(x_c- param[1],sol(x_c,82,17.7,24.7,200),'g--')
 #ax.hlines(y_max,0,160)
 print(y_max)
 print(param[1])
 ax.axvline(-50.65,0,100, linestyle = "-.", color = "forestgreen", linewidth = 1, label = "Trap centre")
-ax.axvline(-26.75,0,100, linestyle = "--", color = "xkcd:dark pink", linewidth = 1, label = "Inner coil centre")
+ax.axvline(-26.75,0,100, linestyle = "-.", color = "xkcd:dark pink", linewidth = 1, label = "Inner coil centre")
 #ax.axvline(0, linestyle = ":", color = "xkcd:ocean blue", linewidth = 1, label = "Mirror coil centre")
 
 ax.set_title("Lower mirror coil @ 200A", fontsize = 14)
