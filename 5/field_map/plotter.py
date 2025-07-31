@@ -10,13 +10,13 @@ print(os.getcwd())
 
 # Get data
 
-data = pd.read_csv("5/field_map/lower_inner_field.csv")
+data = pd.read_csv("5/field_map/upper_mirror_field.csv")
 data["ftime"] = [dt.datetime.fromtimestamp(ts) for ts in data["time"]]
 
 #Detect step -- Parameters below 
 
 data["up"] = data.shift(-1)["mag"] > 1.06*data["mag"]
-data["down"] = data.shift(1)["mag"] > 1.07*data["mag"] 
+data["down"] = data.shift(1)["mag"] > 1.03*data["mag"] 
 
 ups = data.loc[data["up"]].reset_index()
 downs = data.loc[data["down"]].reset_index()
@@ -70,7 +70,7 @@ ax.plot(ftime,points, color = 'bisque', marker = 'd', linestyle = "none", marker
 
 
 # --- points to remove ----- hightest first
-remove = [15,13,10,6,0]
+remove = [20,19,18,17,15,13,11,10,4,2,0]
 
 
 rem_time = []
@@ -82,7 +82,7 @@ for i in remove:
 # Plot removed points
 ax.plot(rem_time, rem_points, linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 15, mew = 2)
 
-ax.set_title("Lower inner coil @ 122A", fontsize = 14)
+ax.set_title("Upper mirror coil @ 200A", fontsize = 14)
 ax.set_xlabel("Time (D Hr:Min)")
 ax.set_ylabel("Field strength (mT)")
 #plt.savefig("5/field_map/mfield.eps", format = "eps")
@@ -146,11 +146,11 @@ ax.plot(x_c - param[1],y, color = 'tab:blue', label = "Fitted")
 
 print(y_max)
 print(param[1])
-ax.axvline(-22.9,0,100, linestyle = "-.", color = "forestgreen", linewidth = 1, label = "Trap centre")
-#ax.axvline(-26.75,0,100, linestyle = "-.", color = "y", linewidth = 1, label = "Inner coil centre")
-ax.axvline(26.75, linestyle = ":", color = "xkcd:ocean blue", linewidth = 1, label = "Mirror coil centre")
+ax.axvline(49.65,0,100, linestyle = "-.", color = "forestgreen", linewidth = 1, label = "Trap centre")
+ax.axvline(26.75,0,100, linestyle = "-.", color = "y", linewidth = 1, label = "Inner coil centre")
+#ax.axvline(26.75, linestyle = ":", color = "xkcd:ocean blue", linewidth = 1, label = "Mirror coil centre")
 
-ax.set_title("Lower inner coil @ 122A", fontsize = 14)
+ax.set_title("Upper mirror coil @ 200A", fontsize = 14)
 ax.set_xlabel("Axial displacement, $z$ (mm)")
 ax.set_ylabel("$B_{total}$ (mT)")
 plt.legend()
@@ -162,4 +162,4 @@ plt.show()
 
 ##### SAVE DATA POINTS ######
 export = pd.DataFrame(data = {'z': x - param[1], 'B': points, 'err': [((x)**2 + 1)**0.5 for x in noise] })
-export.to_csv('lower_inner.dat')
+#export.to_csv('upper_inner.dat')
