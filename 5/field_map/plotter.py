@@ -10,13 +10,13 @@ print(os.getcwd())
 
 # Get data
 
-data = pd.read_csv("5/field_map/lower_mirror_cal.csv")
+data = pd.read_csv("5/field_map/lower_inner_field.csv")
 data["ftime"] = [dt.datetime.fromtimestamp(ts) for ts in data["time"]]
 
-#Detect step
+#Detect step -- Parameters below 
 
 data["up"] = data.shift(-1)["mag"] > 1.06*data["mag"]
-data["down"] = data.shift(1)["mag"] > 1.1*data["mag"] 
+data["down"] = data.shift(1)["mag"] > 1.07*data["mag"] 
 
 ups = data.loc[data["up"]].reset_index()
 downs = data.loc[data["down"]].reset_index()
@@ -67,9 +67,22 @@ for i in edges["ftime"]:
     ax.vlines(i,0,140,'tab:gray', linestyles="--", linewidth = 1)
 
 ax.plot(ftime,points, color = 'bisque', marker = 'd', linestyle = "none", markeredgecolor = 'k')
-ax.plot((ftime[1],ftime[8],ftime[4], ftime[6], ftime[14], ftime[16], ftime[21], ftime[23], ftime[25], ftime[26]), (points[1], points[8], points[4], points[6], points[14], points[16], points[21], points[23], points[25], points[26]), linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 15, mew = 2)
 
-ax.set_title("Lower mirror coil @ 200A", fontsize = 14)
+
+# --- points to remove ----- hightest first
+remove = [15,13,10,6,0]
+
+
+rem_time = []
+rem_points = []
+for i in remove:
+    rem_time.append(ftime[i])
+    rem_points.append(points[i])
+
+# Plot removed points
+ax.plot(rem_time, rem_points, linestyle = "none", marker = "o", color = "none", markeredgecolor = 'r', ms = 15, mew = 2)
+
+ax.set_title("Lower inner coil @ 122A", fontsize = 14)
 ax.set_xlabel("Time (D Hr:Min)")
 ax.set_ylabel("Field strength (mT)")
 #plt.savefig("5/field_map/mfield.eps", format = "eps")
@@ -79,53 +92,12 @@ plt.show()
 
 fig, ax = plt.subplots()
 
-# points removed 
-
-points.pop(26)
-points.pop(25)
-points.pop(23)
-points.pop(21)
-points.pop(16)
-points.pop(14)
-points.pop(8)
-points.pop(6)
-points.pop(4)
-points.pop(1)
-
-noise.pop(26)
-noise.pop(25)
-noise.pop(23)
-noise.pop(21)
-noise.pop(16)
-noise.pop(14)
-noise.pop(8)
-noise.pop(6)
-noise.pop(4)
-noise.pop(1)
-
-time.pop(26)
-time.pop(25)
-time.pop(23)
-time.pop(21)
-time.pop(16)
-time.pop(14)
-time.pop(8)
-time.pop(6)
-time.pop(4)
-time.pop(1)
+for i in remove:
+    points.pop(i)
+    noise.pop(i)
+    time.pop(i)
 
 
-"""
-points.pop(11)
-points.pop()
-noise.pop(11)
-noise.pop()
-points.pop(4)
-noise.pop(4)
-time.pop(11)
-time.pop()
-time.pop(4)
-"""
 
 x = np.arange(start = 0, stop = len(points)*10, step = 10 )
 
@@ -166,23 +138,28 @@ print(comsol)
 
 ax.errorbar(x = x - param[1] , y = points, yerr = [((x)**2 + 1)**0.5 for x in noise], xerr = 2.5, marker = 'd' , linestyle='None', color = 'bisque',  ecolor = 'k',  markeredgecolor = 'k')
 ax.plot(x_c - param[1],y, color = 'tab:blue', label = "Fitted")
-ax.plot(x_c - param[1],sol(x_c,param[1],23.5,24.7,200),linestyle = "-", label = 'Solenoid', color = "xkcd:orange",linewidth = 1)
-ax.plot(x_c - param[1],on_axis(x_c,200,param[1]),'y', label = 'Single loop',linewidth = 1)
-ax.plot(comsol[0]-com_xmax, comsol[1]*1000, color = "k", linewidth = 1, linestyle = "--",label = "COMSOL")
+#ax.plot(x_c - param[1],sol(x_c,param[1],23.5,24.7,200),linestyle = "-", label = 'Solenoid', color = "xkcd:orange",linewidth = 1)
+#ax.plot(x_c - param[1],on_axis(x_c,200,param[1]),'y', label = 'Single loop',linewidth = 1)
+#ax.plot(comsol[0]-com_xmax, comsol[1]*1000, color = "xkcd:dark pink", linewidth = 1, linestyle = "--",label = "COMSOL")
 #ax.plot(x_c- param[1],sol(x_c,82,17.7,24.7,200),'g--')
 #ax.hlines(y_max,0,160)
+
 print(y_max)
 print(param[1])
-ax.axvline(-50.65,0,100, linestyle = "-.", color = "forestgreen", linewidth = 1, label = "Trap centre")
-ax.axvline(-26.75,0,100, linestyle = "-.", color = "xkcd:dark pink", linewidth = 1, label = "Inner coil centre")
-#ax.axvline(0, linestyle = ":", color = "xkcd:ocean blue", linewidth = 1, label = "Mirror coil centre")
+ax.axvline(-22.9,0,100, linestyle = "-.", color = "forestgreen", linewidth = 1, label = "Trap centre")
+#ax.axvline(-26.75,0,100, linestyle = "-.", color = "y", linewidth = 1, label = "Inner coil centre")
+ax.axvline(26.75, linestyle = ":", color = "xkcd:ocean blue", linewidth = 1, label = "Mirror coil centre")
 
-ax.set_title("Lower mirror coil @ 200A", fontsize = 14)
-ax.set_xlabel("Axial displacement (mm)")
-ax.set_ylabel("Field strength (mT)")
+ax.set_title("Lower inner coil @ 122A", fontsize = 14)
+ax.set_xlabel("Axial displacement, $z$ (mm)")
+ax.set_ylabel("$B_{total}$ (mT)")
 plt.legend()
 
 
 
 #plt.savefig("5/field_map/field.eps", format = "eps")
 plt.show()
+
+##### SAVE DATA POINTS ######
+export = pd.DataFrame(data = {'z': x - param[1], 'B': points, 'err': [((x)**2 + 1)**0.5 for x in noise] })
+export.to_csv('lower_inner.dat')

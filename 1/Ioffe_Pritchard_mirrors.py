@@ -25,21 +25,30 @@ e = list(map(add,e,d))
 
 fig, ax = plt.subplots()
 ax.plot(np.linspace(-10,10,num=3000), a, color = 'xkcd:ocean blue', linestyle = '--')
-ax.plot(np.linspace(-10,10,num=3000), b, color = 'xkcd:ocean blue', linestyle = '--')
-ax.plot(np.linspace(-10,10,num=3000), c, color = 'xkcd:dark pink', linestyle = '--')
-ax.plot(np.linspace(-10,10,num=3000), d, color = 'xkcd:dark pink', linestyle = '--')
-ax.plot(np.linspace(-10,10,num=3000), e, color = 'xkcd:dark teal')
+ax.plot(np.linspace(-10,10,num=3000), b, color = 'xkcd:ocean blue', linestyle = '--', label = "Mirror coils")
+ax.plot(np.linspace(-10,10,num=3000), c, color = 'k', linestyle = '--')   #'xkcd:dark pink'
+ax.plot(np.linspace(-10,10,num=3000), d, color = 'k', linestyle = '--', label = "Inner coils")
+ax.plot(np.linspace(-10,10,num=3000), e, color = 'xkcd:dark pink', label = "Total") #dark teal
 
-ax.set_title("Ioffe-Pritchard", fontsize = 14)
+#ax.set_title("Ioffe-Pritchard", fontsize = 14)
 
 #ax.get_xaxis().set_visible(False)
 #ax.get_yaxis().set_visible(False)
 
+plt.tick_params(
+    axis='x',          # changes apply to the x-axis
+    which='both',      # both major and minor ticks are affected         # ticks along the top edge are off
+    labelbottom=False)
 
 
-#ax.set_xlabel("Axial displacement, $z$", fontsize = 14)
+plt.tick_params(
+    axis='y',          # changes apply to the x-axis
+    which='both',      # both major and minor ticks are affected         # ticks along the top edge are off
+    labelleft=False)
+
+ax.set_xlabel("$z$", fontsize = 18)
 #start, end = ax.get_xlim()
 #ax.xaxis.set_ticks(np.arange(start+1, end, 5))
-#ax.set_ylabel("$B_{total}$", fontsize = 14)
-
+ax.set_ylabel("$B_{total}$", fontsize = 18)
+plt.legend()
 plt.show()
